@@ -37,7 +37,7 @@ RUN /root/miniconda/bin/conda install conda-build=3.18.9=py36_3 \
 
 # CUDA 10.0-specific steps
 RUN conda install -y -c https://conda.anaconda.org/hanyucui \
- && tensorflow-gpu=1.15 \
+ tensorflow-gpu=1.15 \
  && conda clean -ya
 
 # Install HDF5 Python bindings

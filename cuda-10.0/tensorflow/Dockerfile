@@ -36,7 +36,7 @@ RUN /root/miniconda/bin/conda install conda-build=3.18.9=py36_3 \
  && /root/miniconda/bin/conda clean -ya
 
 # CUDA 10.0-specific steps
-RUN conda install -y -c https://conda.anaconda.org/hanyucui \
+RUN conda install -y -c anaconda \
  tensorflow-gpu=1.15 \
  && conda clean -ya
 

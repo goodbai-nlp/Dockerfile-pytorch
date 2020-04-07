@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     openssh-server \
     vim \
     htop \
+    build-essential \
  && rm -rf /var/lib/apt/lists/*
 
 # Create a working directory
@@ -41,9 +42,9 @@ RUN conda install -y -c pytorch \
  && conda clean -ya
 
 # Install HDF5 Python bindings
-RUN conda install -y h5py=2.8.0 matplotlib tqdm scikit-learn gensim \
+RUN conda install -y h5py matplotlib tqdm scikit-learn gensim \
  && conda clean -ya
-RUN pip install h5py-cache==1.0
+RUN pip install h5py-cache
 
 # Install Requests, a Python library for making HTTP requests
 RUN conda install -y requests=2.19.1 \

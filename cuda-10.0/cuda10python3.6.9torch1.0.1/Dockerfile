@@ -1,7 +1,7 @@
 FROM nvidia/cuda:10.0-base-ubuntu16.04
 
 # Install some basic utilities
-# RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -16,14 +16,14 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     tzdata \
  && rm -rf /var/lib/apt/lists/*
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 
-#RUN dpkg-reconfigure --frontend noninteractive tzdata
 # Create a working directory
 RUN mkdir /workspace
 WORKDIR /workspace
 
 # Install Miniconda
-RUN curl -so /root/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
+RUN curl -o /root/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
  && chmod +x /root/miniconda.sh \
  && /root/miniconda.sh -b -p /root/miniconda \
  && rm /root/miniconda.sh

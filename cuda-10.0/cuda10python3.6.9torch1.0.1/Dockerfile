@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     vim \
     htop \
     build-essential \
-	tzdata \
+    tzdata \
  && rm -rf /var/lib/apt/lists/*
 
 #RUN dpkg-reconfigure --frontend noninteractive tzdata

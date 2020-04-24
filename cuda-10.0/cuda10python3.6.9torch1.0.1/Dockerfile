@@ -23,16 +23,17 @@ RUN mkdir /workspace
 WORKDIR /workspace
 
 # Install Miniconda
-RUN curl -so ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
- && chmod +x ~/miniconda.sh \
- && ~/miniconda.sh -b -p ~/miniconda \
- && rm ~/miniconda.sh
-ENV PATH=~/miniconda/bin:$PATH
+RUN curl -so /root/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
+ && chmod +x /root/miniconda.sh \
+ && /root/miniconda.sh -b -p /root/miniconda \
+ && rm /root/miniconda.sh
+ENV PATH=/root/miniconda/bin:$PATH
 ENV CONDA_AUTO_UPDATE_CONDA=false
 
-RUN ls ~
+RUN ls /root/ >res.log
+RUN cat res.log
 RUN whereis conda
-RUN ls ~/miniconda/bin
+RUN ls /root/miniconda/bin
 # Create a Python 3.6 environment
 RUN ~/miniconda/bin/conda create -y --name py36 python=3.6.9 \
  && ~/miniconda/bin/conda clean -ya

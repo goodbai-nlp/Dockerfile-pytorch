@@ -1,8 +1,7 @@
 FROM nvidia/cuda:10.0-base-ubuntu16.04
 
 # Install some basic utilities
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -32,6 +31,7 @@ ENV PATH=/root/miniconda/bin:$PATH
 ENV CONDA_AUTO_UPDATE_CONDA=false
 
 RUN ls /root
+RUN whereis conda
 RUN ls /root/miniconda/bin
 # Create a Python 3.6 environment
 RUN /root/miniconda/bin/conda create -y --name py36 python=3.6.9 \

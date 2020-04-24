@@ -3,9 +3,6 @@ FROM nvidia/cuda:10.0-base-ubuntu16.04
 # Install some basic utilities
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN apt-get update
-RUN apt-get install tzdata
-RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -18,8 +15,10 @@ RUN apt-get update && apt-get install -y \
     vim \
     htop \
     build-essential \
+	tzdata \
  && rm -rf /var/lib/apt/lists/*
 
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 # Create a working directory
 RUN mkdir /workspace
 WORKDIR /workspace
@@ -32,7 +31,7 @@ RUN curl -so ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-4.5.1
 ENV PATH=/root/miniconda/bin:$PATH
 ENV CONDA_AUTO_UPDATE_CONDA=false
 
-RUN which conda
+RUN ls /root/miniconda/bin
 # Create a Python 3.6 environment
 RUN /root/miniconda/bin/conda create -y --name py36 python=3.6.9 \
  && /root/miniconda/bin/conda clean -ya

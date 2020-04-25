@@ -1,6 +1,7 @@
 FROM nvidia/cuda:10.0-base-ubuntu16.04
 
 # Install some basic utilities
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
@@ -11,7 +12,10 @@ RUN apt-get update && apt-get install -y \
     openssh-server \
     vim \
     htop \
+    build-essential \
+    tzdata \
  && rm -rf /var/lib/apt/lists/*
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 # Create a working directory
 RUN mkdir /workspace

@@ -2,7 +2,6 @@ FROM nvidia/cuda:10.0-base-ubuntu16.04
 
 # Install some basic utilities
 RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
-
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \

@@ -30,9 +30,6 @@ RUN curl -o /root/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-la
 ENV PATH=/root/miniconda/bin:$PATH
 ENV CONDA_AUTO_UPDATE_CONDA=false
 
-RUN echo $HOME/*
-RUN whereis conda
-RUN ls /root/miniconda/bin
 # Create a Python 3.6 environment
 RUN ~/miniconda/bin/conda create -y --name py36 python=3.6.9 \
  && ~/miniconda/bin/conda clean -ya

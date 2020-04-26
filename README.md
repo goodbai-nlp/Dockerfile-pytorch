@@ -4,6 +4,7 @@
 
 Ubuntu + PyTorch + CUDA (optional)
 
+This respository is a fork of [anibali/pytorch/](https://github.com/anibali/docker-pytorch.git)
 
 ### Requirements
 
@@ -30,11 +31,11 @@ within Docker containers. This can be found at
 ### Prebuilt images
 
 Pre-built images are available on Docker Hub under the name
-[anibali/pytorch](https://hub.docker.com/r/anibali/pytorch/). For example,
-you can pull the CUDA 10.0 version with:
+[muyeby/pytorch](https://hub.docker.com/r/muyeby/pytorch/). For example,
+you can pull the CUDA 10.0 version Pytorch1.4 with:
 
 ```bash
-$ docker pull anibali/pytorch:cuda-10.0
+$ docker pull muyeby/docker-pytorch:torch1.4
 ```
 
 The table below lists software versions for each of the currently supported
@@ -43,7 +44,8 @@ Docker image tags available for `anibali/pytorch`.
 | Image tag   | CUDA  | PyTorch |
 |-------------|-------|---------|
 | `no-cuda`   | None  | 1.2.0   |
-| `cuda-10.0` | 10.0  | 1.2.0   |
+| `cuda-10.1` | 10.1  |   1.4.0 |
+| `cuda-10.0` | 10.0  | 1.0.1, 1.2.0, 1.4.0 |
 | `cuda-9.2`  | 9.2   | 1.2.0   |
 
 The following images are also available, but are deprecated.

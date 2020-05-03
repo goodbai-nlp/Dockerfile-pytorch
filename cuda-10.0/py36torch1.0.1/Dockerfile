@@ -14,8 +14,16 @@ RUN apt-get update && apt-get install -y \
     htop \
     build-essential \
     tzdata \
+	language-pack-zh-hans \
  && rm -rf /var/lib/apt/lists/*
+
+# TimeZone
 RUN dpkg-reconfigure --frontend noninteractive tzdata
+
+# FileEncoding and Language support
+RUN echo -e "LANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh:en_US:en\"" >>/etc/environment
+RUN echo -e "en_US.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\nzh_CN.GBK GBK\nzh_CN GB2312" >>/var/lib/locales/supported.d/local
+RUN locale-gen
 
 # Create a working directory
 RUN mkdir /workspace

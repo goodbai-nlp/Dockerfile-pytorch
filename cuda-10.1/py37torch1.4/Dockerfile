@@ -31,7 +31,7 @@ RUN mkdir /workspace
 WORKDIR /workspace
 
 # clone vim configs
-RUN git clone git@github.com:muyeby/vim-config.git
+RUN git clone https://github.com/muyeby/vim-config.git
 RUN mv vim-config/.vim* ~/
 RUN rm -r vim-config
 

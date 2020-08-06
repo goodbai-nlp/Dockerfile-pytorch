@@ -58,7 +58,6 @@ RUN conda install -y -c pytorch \
     cuda80=1.0 \
     magma-cuda80=2.3.0 \
     "pytorch=0.2.0=py36cuda8.0cudnn6.0_0" \
-    torchvision=0.2.1 \
  && conda clean -ya
 
 # Install HDF5 Python bindings

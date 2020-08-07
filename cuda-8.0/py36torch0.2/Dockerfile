@@ -54,10 +54,10 @@ RUN /root/miniconda/bin/conda install conda-build=3.18.11=py36_0 \
 
 
 # CUDA 8.0-specific steps
-RUN conda install -y -c pytorch \
+RUN conda install -y -c soumith \
     cuda80=1.0 \
     magma-cuda80=2.3.0 \
-    "pytorch=0.2.0=py36cuda8.0cudnn6.0_0" \
+    pytorch=0.2 \
  && conda clean -ya
 
 # Install HDF5 Python bindings

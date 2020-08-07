@@ -32,8 +32,6 @@ WORKDIR /workspace
 
 # clone vim configs
 RUN git clone https://github.com/muyeby/vim-config.git
-RUN mv vim-config/.vim* ~/
-RUN rm -r vim-config
 
 # Install Miniconda
 RUN curl -o /root/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \

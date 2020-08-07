@@ -61,9 +61,9 @@ RUN conda install -y -c soumith \
  && conda clean -ya
 
 # Install HDF5 Python bindings
-RUN conda install -y h5py matplotlib tqdm scikit-learn gensim \
+RUN conda install -y h5py matplotlib tqdm scikit-learn gensim nltk networkx=2.3 \
  && conda clean -ya
-RUN pip install h5py-cache torchtext configargparse
+RUN pip install h5py-cache torchtext configargparse pycorenlp parsimonious
 
 # Install Requests, a Python library for making HTTP requests
 RUN conda install -y requests=2.19.1 \

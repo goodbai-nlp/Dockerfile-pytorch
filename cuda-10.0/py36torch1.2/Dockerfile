@@ -56,7 +56,7 @@ RUN conda install -y -c pytorch \
 # Install Python packages
 RUN conda install -y h5py matplotlib tqdm scikit-learn gensim \
  && conda clean -ya
-RUN pip install h5py-cache torchtext configargparse
+RUN pip install h5py-cache configargparse torchtext==0.4
 
 # Install Requests, a Python library for making HTTP requests
 RUN conda install -y requests=2.19.1 \

@@ -61,12 +61,10 @@ RUN conda install -y h5py matplotlib tqdm scikit-learn gensim \
  && conda clean -ya
 RUN pip install h5py-cache torchtext configargparse
 
-RUN git clone https://github.com/NVIDIA/apex
-RUN cd apex
-RUN pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" \
-  --global-option="--deprecated_fused_adam" --global-option="--xentropy" \
-  --global-option="--fast_multihead_attn" ./
-RUN cd ../
+RUN git clone https://github.com/NVIDIA/apex \
+	&& cd apex \
+	&& pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" --global-option="--deprecated_fused_adam" --global-option="--xentropy" --global-option="--fast_multihead_attn" ./ \
+	&& cd ..
 RUN rm -r apex
 # Install Requests, a Python library for making HTTP requests
 RUN conda install -y requests=2.19.1 \

@@ -51,8 +51,8 @@ RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shangh
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git wget unzip bzip2 sudo p7zip openssh-server vim htop tzdata language-pack-zh-hans curl && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-RUN dpkg-reconfigure --frontend noninteractive tzdata
+    rm -rf /var/lib/apt/lists/* && \
+	dpkg-reconfigure --frontend noninteractive tzdata
 
 ENV PATH $CONDA_DIR/bin:$PATH
 ENV CUDA_HOME=/usr/local/cuda

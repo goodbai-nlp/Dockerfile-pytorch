@@ -10,7 +10,7 @@ ARG CONDA_DIR=/opt/conda
 
 # Instal basic utilities
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git wget unzip bzip2 build-essential ca-certificates tzdata && \
+    apt-get install -y --no-install-recommends git wget unzip bzip2 build-essential ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -46,11 +46,13 @@ ARG CONDA_DIR=/opt/conda
 ARG USERNAME=docker
 ARG USERID=1000
 
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
 # Instal basic utilities
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git wget unzip bzip2 sudo p7zip openssh-server vim htop tzdata language-pack-zh-hans curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 ENV PATH $CONDA_DIR/bin:$PATH
 ENV CUDA_HOME=/usr/local/cuda

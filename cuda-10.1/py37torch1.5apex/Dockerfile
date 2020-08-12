@@ -21,8 +21,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda$CONDA_PYTHON_VERS
     /bin/bash /tmp/miniconda.sh -b -p $CONDA_DIR && \
     rm -rf /tmp/* && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-	dpkg-reconfigure --frontend noninteractive tzdata
+    rm -rf /var/lib/apt/lists/*
 
 RUN conda install -y python=$PYTHON_VERSION && \
     conda install -y pytorch=1.5 torchvision cudatoolkit=10.1 -c pytorch && \

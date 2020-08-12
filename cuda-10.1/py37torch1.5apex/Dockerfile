@@ -10,7 +10,7 @@ ARG CONDA_DIR=/opt/conda
 
 # Instal basic utilities
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git wget unzip bzip2 build-essential ca-certificates && \
+    apt-get install -y --no-install-recommends git wget unzip bzip2 build-essential ca-certificates tzdata && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

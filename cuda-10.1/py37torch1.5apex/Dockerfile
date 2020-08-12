@@ -32,7 +32,7 @@ RUN conda install -y python=$PYTHON_VERSION && \
 # Install apex
 WORKDIR /tmp/
 RUN git clone https://github.com/NVIDIA/apex.git && \
-    cd apex && pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" .
+    cd apex && pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" --global-option="--deprecated_fused_adam" --global-option="--xentropy" --global-option="--fast_multihead_attn" .
 
 RUN  pip install --upgrade pip && \
     pip install pillow-simd h5py-cache torchtext configargparse && \

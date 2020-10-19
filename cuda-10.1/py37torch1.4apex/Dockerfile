@@ -24,7 +24,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda$CONDA_PYTHON_VERS
     rm -rf /var/lib/apt/lists/*
 
 RUN conda install -y python=$PYTHON_VERSION && \
-    conda install -y pytorch=1.5 torchvision cudatoolkit=10.1 -c pytorch && \
+    conda install -y pytorch=1.4 torchvision cudatoolkit=10.1 -c pytorch && \
     conda install -y h5py scikit-learn matplotlib seaborn tqdm gensim \
     pandas mkl-service cython && \
     conda clean -tipsy

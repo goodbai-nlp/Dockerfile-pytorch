@@ -1,10 +1,10 @@
-FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu16.04 AS BUILD
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu16.04 AS BUILD
 
 # LABEL maintainer="ceshine@ceshine.net"
 
 # Based on https://github.com/anurag/fastai-course-1/
 
-ARG PYTHON_VERSION=3.7
+ARG PYTHON_VERSION=3.6
 ARG CONDA_PYTHON_VERSION=3
 ARG CONDA_DIR=/opt/conda
 
@@ -24,7 +24,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda$CONDA_PYTHON_VERS
     rm -rf /var/lib/apt/lists/*
 
 RUN conda install -y python=$PYTHON_VERSION && \
-    conda install -y pytorch=1.5 torchvision cudatoolkit=10.1 -c pytorch && \
+    conda install -y pytorch=1.6 torchvision cudatoolkit=10.2 -c pytorch && \
     conda install -y h5py scikit-learn matplotlib seaborn tqdm gensim \
     pandas mkl-service cython && \
     conda clean -tipsy
@@ -39,7 +39,7 @@ RUN  pip install --upgrade pip && \
     rm -rf ~/.cache/pip
 
 # Runtime image
-FROM nvidia/cuda:10.1-base-ubuntu16.04
+FROM nvidia/cuda:10.2-base-ubuntu16.04
 
 ARG CONDA_DIR=/opt/conda
 ARG USERNAME=docker

@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-base-ubuntu16.04
+FROM klauskyj/cuda8.0-cudnn7:v1.0
 
 # Install some basic utilities
 RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
@@ -15,10 +15,8 @@ RUN apt-get update && apt-get install -y \
     htop \
     build-essential \
     tzdata \
-	language-pack-zh-hans \
+    language-pack-zh-hans \
  && rm -rf /var/lib/apt/lists/*
-
-# TimeZone
 RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 # FileEncoding and Language support
@@ -41,7 +39,7 @@ RUN curl -o /root/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-la
 ENV PATH=/root/miniconda/bin:$PATH
 ENV CONDA_AUTO_UPDATE_CONDA=false
 
-# Create a Python 3.7 environment
+# Create a Python 3.6 environment
 RUN ~/miniconda/bin/conda create -y --name py36 python=3.6 \
  && ~/miniconda/bin/conda clean -ya
 ENV CONDA_DEFAULT_ENV=py36
@@ -50,18 +48,17 @@ ENV PATH=$CONDA_PREFIX/bin:$PATH
 RUN /root/miniconda/bin/conda install conda-build=3.18.11=py36_0 \
  && /root/miniconda/bin/conda clean -ya
 
-
-# CUDA 8.0-specific steps
+# CUDA 10.0-specific steps
 RUN conda install -y -c soumith \
     cuda80=1.0 \
     magma-cuda80=2.3.0 \
-    pytorch=0.2 \
+    pytorch=0.3.0 \
  && conda clean -ya
 
 # Install HDF5 Python bindings
-RUN conda install -y h5py matplotlib tqdm scikit-learn gensim nltk networkx=2.3 \
+RUN conda install -y h5py matplotlib tqdm scikit-learn gensim nltk \
  && conda clean -ya
-RUN pip install h5py-cache torchtext configargparse pycorenlp parsimonious
+RUN pip install h5py-cache torchtext configargparse
 
 # Install Requests, a Python library for making HTTP requests
 RUN conda install -y requests=2.19.1 \

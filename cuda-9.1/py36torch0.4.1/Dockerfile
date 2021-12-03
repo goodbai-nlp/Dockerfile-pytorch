@@ -1,4 +1,4 @@
-FROM nvidia/cuda:7.5-runtime-ubuntu14.04
+FROM nvidia/cuda:9.1-base-ubuntu16.04
 
 # Install some basic utilities
 RUN apt-get update && apt-get install -y \
@@ -34,18 +34,18 @@ ENV CONDA_AUTO_UPDATE_CONDA=false
 
 # Create a Python 3.6 environment
 RUN /home/user/miniconda/bin/conda install conda-build \
- && /home/user/miniconda/bin/conda create -y --name py36 python=3.6.5 \
+ && /home/user/miniconda/bin/conda create -y --name py36 python=3.6 \
  && /home/user/miniconda/bin/conda clean -ya
 ENV CONDA_DEFAULT_ENV=py36
 ENV CONDA_PREFIX=/home/user/miniconda/envs/$CONDA_DEFAULT_ENV
 ENV PATH=$CONDA_PREFIX/bin:$PATH
 
-# CUDA 7.5-specific steps
+# CUDA 9.1-specific steps
 RUN conda install -y -c pytorch \
-    cuda75=1.0 \
-    magma-cuda75=2.2.0 \
-    pytorch=0.3.0 \
-    torchvision=0.2.0 \
+    cuda91=1.0 \
+    magma-cuda91=2.3.0 \
+    pytorch=0.4.1 \
+    torchvision=0.2.1 \
  && conda clean -ya
 
 # Install HDF5 Python bindings

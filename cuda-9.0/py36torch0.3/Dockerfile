@@ -41,7 +41,7 @@ ENV PATH=/root/miniconda/bin:$PATH
 ENV CONDA_AUTO_UPDATE_CONDA=false
 
 # Create a Python 3.6 environment
-RUN ~/miniconda/bin/conda create -y --name py36 python=3.6.5 \
+RUN ~/miniconda/bin/conda create -y --name py36 python=3.6 \
  && ~/miniconda/bin/conda clean -ya
 ENV CONDA_DEFAULT_ENV=py36
 ENV CONDA_PREFIX=/root/miniconda/envs/$CONDA_DEFAULT_ENV
@@ -51,7 +51,7 @@ RUN /root/miniconda/bin/conda install conda-build \
 
 RUN conda install -y -c pytorch \
     cuda90 \
-	pytorch=0.3.1 \
+	pytorch=0.3.0 \
  && conda clean -ya
 
 RUN conda install -y h5py matplotlib tqdm scikit-learn gensim nltk \

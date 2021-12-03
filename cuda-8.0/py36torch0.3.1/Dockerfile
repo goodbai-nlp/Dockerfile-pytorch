@@ -1,39 +1,71 @@
-FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
+FROM nvidia/cuda:8.0-base-ubuntu16.04
 
-RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
+# Install some basic utilities
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-         build-essential \
-         cmake \
-         git \
-         curl \
-         vim \
-         htop \
-         tzdata \
-         ca-certificates \
-         libnccl2=2.0.5-2+cuda8.0 \
-         libnccl-dev=2.0.5-2+cuda8.0 \
-         libjpeg-dev \
-         libpng-dev &&\
-     rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    sudo \
+    git \
+    bzip2 \
+    libx11-6 \
+    openssh-server \
+    vim \
+    htop \
+    build-essential \
+    tzdata \
+	language-pack-zh-hans \
+ && rm -rf /var/lib/apt/lists/*
 
+# TimeZone
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 
-ENV PYTHON_VERSION=3.6
-RUN curl -o ~/miniconda.sh -O https://repo.anaconda.com/miniconda/Miniconda3-4.3.31-Linux-x86_64.sh && \
-    chmod +x ~/miniconda.sh && \
-    ~/miniconda.sh -b -p /opt/conda && \
-    rm ~/miniconda.sh && \
-    /opt/conda/bin/conda install numpy pyyaml scipy ipython mkl jupyter pandas gensim scikit-learn matplotlib seaborn hdf5 && \
-    /opt/conda/bin/conda install -c soumith magma-cuda80 && \
-    /opt/conda/bin/conda clean -ya
-ENV PATH /opt/conda/bin:$PATH
-# This must be done before pip so that requirements.txt is available
-WORKDIR /opt/pytorch
-COPY . .
+# FileEncoding and Language support
+RUN echo -e "LANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh:en_US:en\"" >>/etc/environment
+RUN echo -e "en_US.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\nzh_CN.GBK GBK\nzh_CN GB2312" >>/var/lib/locales/supported.d/local
+RUN locale-gen
 
-RUN TORCH_CUDA_ARCH_LIST="3.5 5.2 6.0 6.1+PTX" TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
-    CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" \
-    pip install -v .
-
+# Create a working directory
+RUN mkdir /workspace
 WORKDIR /workspace
-RUN chmod -R a+w /workspace
+
+# clone vim configs
+RUN git clone https://github.com/muyeby/vim-config.git
+
+# Install Miniconda
+RUN curl -o /root/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+ && chmod +x /root/miniconda.sh \
+ && /root/miniconda.sh -b -p /root/miniconda \
+ && rm /root/miniconda.sh
+ENV PATH=/root/miniconda/bin:$PATH
+ENV CONDA_AUTO_UPDATE_CONDA=false
+
+# Create a Python 3.6 environment
+RUN ~/miniconda/bin/conda create -y --name py36 python=3.6 \
+ && ~/miniconda/bin/conda clean -ya
+ENV CONDA_DEFAULT_ENV=py36
+ENV CONDA_PREFIX=/root/miniconda/envs/$CONDA_DEFAULT_ENV
+ENV PATH=$CONDA_PREFIX/bin:$PATH
+RUN /root/miniconda/bin/conda install conda-build=3.18.11=py36_0 \
+ && /root/miniconda/bin/conda clean -ya
+
+
+# CUDA 8.0-specific steps
+RUN conda install -y -c soumith \
+    cuda80=1.0 \
+    magma-cuda80=2.3.0 \
+    pytorch=0.3.1 \
+ && conda clean -ya
+
+# Install HDF5 Python bindings
+RUN conda install -y h5py matplotlib tqdm scikit-learn gensim nltk networkx=2.3 \
+ && conda clean -ya
+RUN pip install h5py-cache torchtext configargparse pycorenlp parsimonious
+
+# Install Requests, a Python library for making HTTP requests
+RUN conda install -y requests=2.19.1 \
+ && conda clean -ya
+
+# Set the default command to python3
+CMD ["python3"]

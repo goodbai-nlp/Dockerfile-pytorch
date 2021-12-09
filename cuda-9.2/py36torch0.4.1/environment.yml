@@ -1,23 +1,22 @@
 name: base
 dependencies:
-- nvidia::cudatoolkit=11.3.1
+- nvidia::cudatoolkit=9.2.148
 - numpy
 - pillow
 - pip
-- python=3.8
-- pytorch::pytorch=1.10.0=py3.8_cuda11.3_cudnn8.2.0_0
+- python=3.6
+- pytorch::pytorch=0.4.1=py36_cuda9.2.148_cudnn7.1.4_1
 - scipy
 - tqdm
 - scikit-learn
 - gensim
 - pandas
+- tensorboard
+- tensorboardX
 - pip:
   - pillow-simd
   - h5py-cache
   - configargparse
   - sacrebleu
   - rouge-score
-  - datasets==1.16
-  - transformers==4.10.0
-  - pytorch-lightning==1.5.0
   - nltk

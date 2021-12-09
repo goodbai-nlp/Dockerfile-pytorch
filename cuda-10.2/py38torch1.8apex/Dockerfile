@@ -1,10 +1,7 @@
 FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu16.04 AS BUILD
 
-# LABEL maintainer="ceshine@ceshine.net"
+# LABEL maintainer="muyeby"
 
-# Based on https://github.com/anurag/fastai-course-1/
-
-ARG PYTHON_VERSION=3.8
 ARG CONDA_PYTHON_VERSION=3
 ARG CONDA_DIR=/opt/conda
 
@@ -15,28 +12,23 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install miniconda
+COPY environment.yml /tmp/environment.yml
+# Install miniconda
 ENV PATH $CONDA_DIR/bin:$PATH
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda$CONDA_PYTHON_VERSION-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
     echo 'export PATH=$CONDA_DIR/bin:$PATH' > /etc/profile.d/conda.sh && \
     /bin/bash /tmp/miniconda.sh -b -p $CONDA_DIR && \
+    conda env update -n base -f /tmp/environment.yml && \
     rm -rf /tmp/* && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN conda install -y python=$PYTHON_VERSION && \
-    conda install -y pytorch=1.8.1 torchvision cudatoolkit=10.2 -c pytorch && \
-    conda install -y h5py scikit-learn matplotlib seaborn tqdm gensim \
-    pandas mkl-service cython tensorboard tensorboardx && \
-    conda clean -ya
+    rm -rf /var/lib/apt/lists/* && \
+    conda clean -ya && \
+    rm -rf ~/.cache/pip
 
 # Install apex
 WORKDIR /tmp/
 RUN git clone https://github.com/NVIDIA/apex.git && \
     cd apex && pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" --global-option="--deprecated_fused_adam" --global-option="--xentropy" --global-option="--fast_multihead_attn" .
-
-RUN  pip install --upgrade pip && \
-    pip install pillow-simd h5py-cache configargparse sacrebleu rouge-score datasets transformers==4.8.2 pytorch-lightning==1.4.5 && \
-    rm -rf ~/.cache/pip
 
 # Runtime image
 FROM nvidia/cuda:10.2-base-ubuntu16.04
@@ -48,13 +40,14 @@ ARG USERID=1000
 RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
 # Instal basic utilities
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git wget unzip bzip2 sudo p7zip openssh-server vim htop tzdata language-pack-zh-hans curl && \
+    apt-get install -y --no-install-recommends git wget unzip bzip2 p7zip build-essential ca-certificates openssh-server vim htop tzdata language-pack-zh-hans curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
 	dpkg-reconfigure --frontend noninteractive tzdata && \
-	echo -e "LANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh:en_US:en\"" >>/etc/environment && \
-	echo -e "en_US.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\nzh_CN.GBK GBK\nzh_CN GB2312" >>/var/lib/locales/supported.d/local && \
-	locale-gen
+	locale-gen zh_CN.UTF-8 && \
+    update-locale LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 LANGUAGE=zh_CN.UTF-8
+
+ENV LANG en_US.utf8
 
 ENV PATH $CONDA_DIR/bin:$PATH
 ENV CUDA_HOME=/usr/local/cuda
@@ -63,8 +56,7 @@ ENV PATH=$PATH:$CUDA_ROOT/bin:$HOME/bin
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64
 
 RUN mkdir -p /opt/conda/ && \
-    mkdir /workspace && \
-	git clone https://github.com/muyeby/vim-config.git
+    mkdir /workspace
 
 WORKDIR /workspace
 

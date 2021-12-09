@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.3.1-devel-ubuntu16.04 AS BUILD
+FROM nvidia/cuda:11.3.1-devel-ubuntu20.04 AS BUILD
 
 # LABEL maintainer="muyeby"
 
@@ -29,7 +29,7 @@ RUN git clone https://github.com/NVIDIA/apex.git && \
     rm -rf ~/.cache/pip
 
 # Runtime image
-FROM nvidia/cuda:11.1.1-base-ubuntu16.04
+FROM nvidia/cuda:11.3.1-base-ubuntu20.04
 
 ARG CONDA_DIR=/opt/conda
 ARG USERNAME=docker

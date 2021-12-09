@@ -1,5 +1,4 @@
-FROM nvidia/cuda:10.1-base-ubuntu16.04
-
+FROM nvidia/cuda:11.1.1-base-ubuntu16.04
 # LABEL maintainer="muyeby"
 
 ARG CONDA_PYTHON_VERSION=3
@@ -34,3 +33,4 @@ RUN mkdir /workspace
 WORKDIR /workspace/
 # Set the default command to python3
 CMD ["python3"]
+

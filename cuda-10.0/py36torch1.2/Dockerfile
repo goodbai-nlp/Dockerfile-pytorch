@@ -1,66 +1,36 @@
 FROM nvidia/cuda:10.0-base-ubuntu16.04
 
-# Install some basic utilities
+# LABEL maintainer="muyeby"
+
+ARG CONDA_PYTHON_VERSION=3
+ARG CONDA_DIR=/opt/conda
 RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
-RUN apt-get update && apt-get install -y \
-    curl \
-    ca-certificates \
-    sudo \
-    git \
-    bzip2 \
-    libx11-6 \
-    openssh-server \
-    vim \
-    htop \
-    build-essential \
-    tzdata \
-	language-pack-zh-hans \
- && rm -rf /var/lib/apt/lists/*
-RUN dpkg-reconfigure --frontend noninteractive tzdata
 
-# FileEncoding and Language support
-RUN echo -e "LANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh:en_US:en\"" >>/etc/environment
-RUN echo -e "en_US.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\nzh_CN.GBK GBK\nzh_CN GB2312" >>/var/lib/locales/supported.d/local
-RUN locale-gen
+# Instal basic utilities
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git wget unzip bzip2 p7zip build-essential ca-certificates openssh-server vim htop tzdata language-pack-zh-hans curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+	dpkg-reconfigure --frontend noninteractive tzdata && \
+	locale-gen zh_CN.UTF-8 && \
+    update-locale LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 LANGUAGE=zh_CN.UTF-8
 
-# Create a working directory
+ENV LANG en_US.utf8
+
+COPY environment.yml /tmp/environment.yml
+# Install miniconda
+ENV PATH $CONDA_DIR/bin:$PATH
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda$CONDA_PYTHON_VERSION-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    echo 'export PATH=$CONDA_DIR/bin:$PATH' > /etc/profile.d/conda.sh && \
+    /bin/bash /tmp/miniconda.sh -b -p $CONDA_DIR && \
+    conda env update -n base -f /tmp/environment.yml && \
+    rm -rf /tmp/* && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    conda clean -ya && \
+    rm -rf ~/.cache/pip
+
 RUN mkdir /workspace
-WORKDIR /workspace
-
-RUN git clone https://github.com/muyeby/vim-config.git
-
-# Install Miniconda
-RUN curl -o /root/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
- && chmod +x ~/miniconda.sh \
- && ~/miniconda.sh -b -p ~/miniconda \
- && rm ~/miniconda.sh
-ENV PATH=/root/miniconda/bin:$PATH
-ENV CONDA_AUTO_UPDATE_CONDA=false
-
-# Create a Python 3.6 environment
-RUN /root/miniconda/bin/conda create -y --name py36 python=3.6 \
- && /root/miniconda/bin/conda clean -ya
-ENV CONDA_DEFAULT_ENV=py36
-ENV CONDA_PREFIX=/root/miniconda/envs/$CONDA_DEFAULT_ENV
-ENV PATH=$CONDA_PREFIX/bin:$PATH
-RUN /root/miniconda/bin/conda install conda-build=3.18.11=py36_0 \
- && /root/miniconda/bin/conda clean -ya
-
-# CUDA 10.0-specific steps
-RUN conda install -y -c pytorch \
-    cudatoolkit=10.0 \
-    "pytorch=1.2.0=py3.6_cuda10.0.130_cudnn7.6.2_0" \
-    "torchvision=0.4.0=py36_cu100" \
- && conda clean -ya
-
-# Install Python packages
-RUN conda install -y h5py matplotlib tqdm scikit-learn gensim \
- && conda clean -ya
-RUN pip install h5py-cache configargparse torchtext==0.4
-
-# Install Requests, a Python library for making HTTP requests
-RUN conda install -y requests=2.19.1 \
- && conda clean -ya
-
+WORKDIR /workspace/
 # Set the default command to python3
 CMD ["python3"]

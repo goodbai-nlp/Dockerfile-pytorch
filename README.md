@@ -41,7 +41,7 @@ $ docker pull muyeby/docker-pytorch:torch1.4
 The table below lists software versions for each of the currently supported
 
 | CUDA  | PyTorch |
-|-------------|-------|---------|
+|-------------|---------|
 | `no-cuda`   | 1.2.0   |
 | `cuda-11.3` | 1.10.0  |
 | `cuda-11.1` | 1.8.1   |

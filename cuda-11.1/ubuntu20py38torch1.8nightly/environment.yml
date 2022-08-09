@@ -1,0 +1,25 @@
+name: base
+dependencies:
+- nvidia::cudatoolkit=11.1.1
+- numpy
+- pillow
+- pip
+- python=3.8
+- pytorch::pytorch=1.8.1=py3.8_cuda11.1_cudnn8.0.5_0
+- scipy
+- tqdm
+- scikit-learn
+- gensim
+- pandas
+- tensorboard
+- tensorboardX
+- pip:
+  - pillow-simd
+  - h5py-cache
+  - configargparse
+  - sacrebleu
+  - rouge-score
+  - bagua-cuda111
+  - transformers==4.10.0
+  - pytorch-lightning==1.6.0
+  - nltk

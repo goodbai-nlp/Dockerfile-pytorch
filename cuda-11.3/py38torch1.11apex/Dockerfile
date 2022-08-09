@@ -7,7 +7,7 @@ ARG CONDA_DIR=/opt/conda
 
 # Instal basic utilities
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git wget unzip bzip2 build-essential ca-certificates zsh && \
+    apt-get install -y --no-install-recommends git wget unzip bzip2 build-essential ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -42,8 +42,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
 	dpkg-reconfigure --frontend noninteractive tzdata && \
-	echo "LANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh:en_US:en\"" >>/etc/environment && \
-	echo "en_US.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\nzh_CN.GBK GBK\nzh_CN GB2312" >>/var/lib/locales/supported.d/local && \
+	echo -e "LANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh:en_US:en\"" >>/etc/environment && \
+	echo -e "en_US.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\nzh_CN.GBK GBK\nzh_CN GB2312" >>/var/lib/locales/supported.d/local && \
 	locale-gen
 
 ENV PATH $CONDA_DIR/bin:$PATH

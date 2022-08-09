@@ -1,0 +1,23 @@
+name: base
+dependencies:
+- numpy
+- pillow
+- pip
+- scipy
+- tqdm
+- scikit-learn
+- gensim
+- pandas
+- tensorboard
+- tensorboardX
+- pip:
+  - pillow-simd
+  - h5py-cache
+  - configargparse
+  - sacrebleu
+  - rouge-score
+  - datasets==2.3.2
+  - transformers==4.21.0
+  - fairscale
+  - deepspeed
+  - nltk

@@ -10,11 +10,10 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends git wget unzip bzip2 p7zip build-essential ca-certificates openssh-server vim htop zsh tzdata language-pack-zh-hans curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-	dpkg-reconfigure --frontend noninteractive tzdata && \
-	locale-gen zh_CN.UTF-8 && \
-    update-locale LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 LANGUAGE=zh_CN.UTF-8
-
-ENV LANG en_US.utf8
+    dpkg-reconfigure --frontend noninteractive tzdata && \
+    echo "LANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh:en_US:en\"" >>/etc/environment && \
+    echo "en_US.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\nzh_CN.GBK GBK\nzh_CN GB2312" >>/var/lib/locales/supported.d/local && \
+    locale-gen
 
 COPY environment.yml /tmp/environment.yml
 # Install miniconda

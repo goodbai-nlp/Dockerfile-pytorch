@@ -15,6 +15,14 @@ dependencies:
   - pillow-simd
   - h5py-cache
   - configargparse
+  - cached_property
+  - networkx
+  - penman>=1.1.0
+  - pytorch-ignite
+  - regex
+  - smatch
+  - wandb
+  - PyYAML>=5.1
   - sacrebleu
   - rouge-score
   - datasets==2.4.0

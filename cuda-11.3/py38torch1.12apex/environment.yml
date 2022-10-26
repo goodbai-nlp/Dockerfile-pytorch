@@ -26,10 +26,8 @@ dependencies:
   - sacrebleu
   - rouge-score
   - datasets==2.4.0
-  - transformers==4.21.0
-  - pytorch-lightning==1.7.0
+  - transformers==4.21.3
   - fairscale
-  - deepspeed
   - accelerate
   - sentencepiece!=0.1.92
   - nltk

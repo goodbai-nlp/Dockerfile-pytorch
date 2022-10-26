@@ -1,11 +1,11 @@
 name: base
 dependencies:
-- nvidia::cudatoolkit=11.1.1
+- nvidia::cudatoolkit=10.2.89
 - numpy
 - pillow
 - pip
 - python=3.8
-- pytorch::pytorch=1.8.1=py3.8_cuda11.1_cudnn8.0.5_0
+- pytorch::pytorch=1.7.1=py3.8_cuda10.2.89_cudnn7.6.5_0
 - scipy
 - tqdm
 - scikit-learn
@@ -18,10 +18,6 @@ dependencies:
   - h5py-cache
   - configargparse
   - sacrebleu
-  - smatch
-  - networkx
-  - penman
   - rouge-score
-  - datasets==2.4.0
-  - transformers==4.21.3
   - nltk
+  - pytorch_pretrained_bert==0.6.2

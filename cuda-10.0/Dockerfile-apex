@@ -1,14 +1,16 @@
-FROM nvidia/cuda:11.1.1-devel-ubuntu20.04 AS BUILD
+FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu16.04 AS BUILD
 
 # LABEL maintainer="muyeby"
 
 ARG CONDA_PYTHON_VERSION=3
 ARG CONDA_DIR=/opt/conda
-
+RUN apt-get update && \
+	apt-get install gnupg-curl && \
+    apt-key del 7fa2af80 && \
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub && \
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/7fa2af80.pub
+    
 # Instal basic utilities
-RUN apt-key del 7fa2af80
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/7fa2af80.pub
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git wget unzip bzip2 build-essential ca-certificates && \
     apt-get clean && \
@@ -34,19 +36,16 @@ RUN git clone https://github.com/NVIDIA/apex.git && \
     cd apex && pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" --global-option="--deprecated_fused_adam" --global-option="--xentropy" --global-option="--fast_multihead_attn" .
 
 # Runtime image
-FROM nvidia/cuda:11.1.1-base-ubuntu20.04
+FROM nvidia/cuda:10.1-base-ubuntu16.04
 
 ARG CONDA_DIR=/opt/conda
 ARG USERNAME=docker
 ARG USERID=1000
 
 RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
-RUN apt-key del 7fa2af80
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/7fa2af80.pub
 # Instal basic utilities
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git wget unzip bzip2 p7zip build-essential ca-certificates openssh-server vim htop zsh tzdata language-pack-zh-hans curl && \
+    apt-get install -y --no-install-recommends git wget unzip bzip2 p7zip build-essential ca-certificates openssh-server vim htop tzdata language-pack-zh-hans curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
 	dpkg-reconfigure --frontend noninteractive tzdata && \

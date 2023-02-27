@@ -12,8 +12,6 @@ In order to use this image you must have Docker Engine installed. Instructions
 for setting up Docker Engine are
 [available on the Docker website](https://docs.docker.com/engine/installation/).
 
-#### CUDA requirements
-
 If you have a CUDA-compatible NVIDIA graphics card, you can use a CUDA-enabled
 version of the PyTorch image to enable hardware acceleration. I have only
 tested this in Ubuntu Linux.
@@ -27,6 +25,27 @@ You will also need to install `nvidia-docker2` to enable GPU device access
 within Docker containers. This can be found at
 [NVIDIA/nvidia-docker](https://github.com/NVIDIA/nvidia-docker).
 
+
+### Features
+
+We have three types of docker files:
+
+| Type  | Feature |
+|-------------|---------|
+| `dockerfile-runtime`   | The lightweight dockerfile which does not support CUDA compile |
+| `dockerfile-devel` | The heavyweight dockerfile which supports cuda compile, use it if you need to compile packages with CUDA |
+| `dockerfile-apex` | You will need that if you only want to build the packages once and need a lightweight docker image |
+
+
+### Build images
+
+1. Modify the `environment.yml` to add your own packages, and move it to the directory of docker file. 
+
+2. Build the docker images using the following command:
+
+```bash
+$ docker pull muyeby/docker-pytorch:torch1.4
+```
 
 ### Prebuilt images
 
@@ -43,7 +62,7 @@ The table below lists software versions for each of the currently supported
 | CUDA  | PyTorch |
 |-------------|---------|
 | `no-cuda`   | 1.2.0   |
-| `cuda-11.3` | 1.10.0  |
+| `cuda-11.3` | 1.10.0, 1.12.0  |
 | `cuda-11.1` | 1.8.1   |
 | `cuda-10.2` | 1.5.1, 1.6.0, 1.8.1 |
 | `cuda-10.1` | 1.3.1, 1.4.0 |

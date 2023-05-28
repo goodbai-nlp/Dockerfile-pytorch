@@ -1,0 +1,36 @@
+FROM nvidia/cuda:11.7.0-devel-ubuntu20.04
+
+# LABEL maintainer="muyeby"
+
+ARG CONDA_PYTHON_VERSION=3
+ARG CONDA_DIR=/opt/conda
+RUN apt-key del 7fa2af80
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/7fa2af80.pub
+
+# Instal basic utilities
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+RUN apt-get update && \
+    apt-get install -y --fix-missing --no-install-recommends git wget unzip bzip2 sudo p7zip openssh-server vim htop tzdata language-pack-zh-hans curl zsh && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+	echo "LANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh:en_US:en\"" >>/etc/environment && \
+	echo "en_US.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\nzh_CN.GBK GBK\nzh_CN GB2312" >>/var/lib/locales/supported.d/local && \
+	locale-gen
+
+# Install miniconda
+COPY environment.yml /tmp/environment.yml
+ENV PATH $CONDA_DIR/bin:$PATH
+ENV CUDA_HOME=/usr/local/cuda
+ENV CUDA_ROOT=$CUDA_HOME
+ENV PATH=$PATH:$CUDA_ROOT/bin:$HOME/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    echo 'export PATH=$CONDA_DIR/bin:$PATH' > /etc/profile.d/conda.sh && \
+    /bin/bash /tmp/miniconda.sh -b -p $CONDA_DIR && \
+    conda env update -n base -f /tmp/environment.yml && \
+    rm -rf /tmp/* && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    conda clean -ya && \
+    rm -rf ~/.cache/pip

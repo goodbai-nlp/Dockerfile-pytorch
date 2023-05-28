@@ -1,0 +1,17 @@
+name: base
+dependencies:
+- numpy
+- pillow
+- pip
+- python=3.10
+- scipy
+- tqdm
+- scikit-learn
+- gensim
+- pip:
+  - pillow-simd
+  - h5py-cache
+  - configargparse
+  - cached_property
+  - networkx
+  - nltk
